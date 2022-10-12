@@ -1,9 +1,6 @@
-# from crypt import methods
-# from nis import cat
 import os
 from unicodedata import category
 
-# import resource
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -13,7 +10,7 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
-# Questions pagination ---Done
+# Questions pagination <--Done
 def paginate_questions(request, selection):
     page = request.args.get("page", 1, type=int)
     start = (page - 1) * QUESTIONS_PER_PAGE
@@ -24,14 +21,14 @@ def paginate_questions(request, selection):
 
 
 def create_app(test_config=None):
-    # create and configure the app
+    # create and configure Triva app <--Done
     app = Flask(__name__)
     setup_db(app)
 
-    # CORS app setup ---Done
+    # CORS app <--Done
     CORS(app, resource={"/": {"origins": "*"}})
 
-    # CORS Headers ---Done
+    # CORS <--Done
     @app.after_request
     def after_request(response):
         response.headers.add(
