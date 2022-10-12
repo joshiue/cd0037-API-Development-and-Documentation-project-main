@@ -119,7 +119,7 @@ def create_app(test_config=None):
     of the questions list in the "List" tab.
     """
     @app.route("/questions", methods=["POST"])
-    def create_question():
+    def create_question_list():
         body = request.get_json()
 
         question = body.get("question", None)
@@ -187,7 +187,7 @@ def create_app(test_config=None):
     Try using the word "title" to start.
     """
     @app.route("/categories/<int:category_id>/questions")
-    def category_question(category_id):
+    def category_question_list(category_id):
         try:
             c_id = category_id + 1
 
@@ -228,7 +228,7 @@ def create_app(test_config=None):
     category to be shown.
     """
     @app.route("/quizzes", methods=["POST"])
-    def fetch_quizzes():
+    def fetch_quizzes_list():
         # get the qestion category
         body = request.get_json()
         quiz_category = body.get("quiz_category", None)
@@ -283,32 +283,32 @@ def create_app(test_config=None):
     including 404 and 422.
     """
     @app.errorhandler(404)
-    def not_found(error):
+    def file_absent(error):
         return (
             jsonify({"success": False, "error": 404, "message": "resource not found"}),
             404,
         )
 
     @app.errorhandler(422)
-    def unprocessable(error):
+    def unprocessable_path(error):
         return (
             jsonify({"success": False, "error": 422, "message": "unprocessable"}),
             422,
         )
 
     @app.errorhandler(400)
-    def bad_request(error):
+    def bad_request_log(error):
         return jsonify({"success": False, "error": 400, "message": "bad request"}), 400
 
     @app.errorhandler(405)
-    def not_found(error):
+    def file_absent(error):
         return (
             jsonify({"success": False, "error": 405, "message": "method not allowed"}),
             405,
         )
 
     @app.errorhandler(505)
-    def not_found(error):
+    def file_absent(error):
         return (
             jsonify(
                 {"success": False, "error": 505, "message": "Internal server error"}
