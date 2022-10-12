@@ -17,7 +17,7 @@ def paginate_questions(request, selection):
     return questions[start:end]
 
 def create_app(test_config=None):
-    # create and configure the app
+    # create and configure Trivia app
     app = Flask(__name__)
     setup_db(app)
 
@@ -42,7 +42,7 @@ def create_app(test_config=None):
     Create an endpoint to handle GET requests
     for all available categories.
     """
-# Get categories looped in array
+# Get categories looped in list
     @app.route("/categories")
     def get_categories_function(): 
         get_category = Category.query.all()
@@ -191,20 +191,20 @@ def create_app(test_config=None):
         try:
             c_id = category_id + 1
 
-            # fetch the question of a category by their id
+            # fetch question in a path by id
             category = Category.query.filter(Category.id == c_id).one_or_none()
 
             if category is None:
                 abort(404)
 
-            # fetch all question in the selected category
+            # fetch question in particular path
             selection = (
                 Question.query.filter(Question.category == category.id)
                 .order_by(Question.id)
                 .all()
             )
 
-            # Post the update in the front end
+            # Post to reflect in the front end
             current_questions = paginate_questions(request, selection)
 
             return jsonify(
@@ -229,7 +229,7 @@ def create_app(test_config=None):
     """
     @app.route("/quizzes", methods=["POST"])
     def fetch_quizzes_list():
-        # get the qestion category
+        # get qestion type
         body = request.get_json()
         quiz_category = body.get("quiz_category", None)
         previous_questions = body.get("previous_questions", None)
