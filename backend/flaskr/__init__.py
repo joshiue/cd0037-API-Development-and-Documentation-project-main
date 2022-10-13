@@ -256,8 +256,8 @@ def create_app(test_config=None):
         except Exception:
             abort(404)
 
-    ############# Error handlers #############
-
+    # Error handlers --<checked
+    
     @app.errorhandler(404)
     def file_absent(error):
         return (
