@@ -1,6 +1,8 @@
+## crypt import methods & nis import cat 
 import os
 from unicodedata import category
 
+## resource import 
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -10,7 +12,7 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
-# Questions pagination <--Done
+## Questions pagination <--Done
 def paginate_questions(request, selection):
     page = request.args.get("page", 1, type=int)
     start = (page - 1) * QUESTIONS_PER_PAGE
@@ -21,14 +23,14 @@ def paginate_questions(request, selection):
 
 
 def create_app(test_config=None):
-    # create and configure Triva app <--Done
+    ## create and configure Triva app database <--Done
     app = Flask(__name__)
     setup_db(app)
 
-    # CORS app <--Done
+    ## CORS setup <--Done
     CORS(app, resource={"/": {"origins": "*"}})
 
-    # CORS <--Done
+    ## CORS Headers <--Done
     @app.after_request
     def after_request(response):
         response.headers.add(
@@ -39,7 +41,7 @@ def create_app(test_config=None):
         )
         return response
 
-    # Endpoint to handle GET requests for all available categories ---Done
+    ## Endpoint to handle GET requests for all available categories ---Done
 
     @app.route("/categories")
     def available_categories_type():
@@ -59,15 +61,15 @@ def create_app(test_config=None):
             }
         )
 
-    # Endpoint to handling GET questions, pagination (10 questions). Endpoint returns a list of questions, total questions, type, categories.
+    # Endpoint to handling GET questions, pagination (10 questions). Endpoint returns a list of questions, number total questions, current categories.
 
     @app.route("/questions")
     def available_questions():
         try:
-            # all questions 
+            # get all questions 
             selection = Question.query.order_by(Question.id).all()
 
-            # list questions in a page
+            # get present questions in a page
             current_questions = paginate_questions(request, selection)
 
             if len(current_questions) == 0:
@@ -115,10 +117,10 @@ def create_app(test_config=None):
 
     @app.route("/questions", methods=["POST"])
     def create_question():
-        # body from frontend input
+        # get body from frontend input in json
         body = request.get_json()
 
-        # data frontend `input`
+        # input data from frontend
         question = body.get("question", None)
         answer = body.get("answer", None)
         category = body.get("category", None)
@@ -132,7 +134,7 @@ def create_app(test_config=None):
                     Question.question.ilike(f"%{search}%")
                 )
 
-                # Post to reflect in the front end
+                # Post latest state in the front end
                 current_questions = paginate_questions(request, selection)
 
                 categories = Category.query.all()
@@ -149,7 +151,7 @@ def create_app(test_config=None):
                     }
                 )
 
-            # Endpoint to POST a new question, require the question and answer text, category, and difficulty rate.
+            # Endpoint to POST a new question, requiring the question and answer text, category, and difficulty score.
             else:
                 question = Question(
                     question=question,
@@ -161,7 +163,7 @@ def create_app(test_config=None):
 
                 selection = Question.query.order_by(Question.id).all()
 
-                # Post to reflect in the front end
+                # Post latest state in the front end
                 current_questions = paginate_questions(request, selection)
 
                 return jsonify(
@@ -177,13 +179,13 @@ def create_app(test_config=None):
         except Exception:
             abort(422)
 
-    # A GET endpoint to get question in particular path.
+    # A GET endpoint to get question from category type
     @app.route("/categories/<int:category_id>/questions")
     def category_question_list(category_id):
         try:
             c_id = category_id + 1
 
-            # fetch question in a path by id
+            # fetch question of category by the id
             category = Category.query.filter(Category.id == c_id).one_or_none()
 
             if category is None:
@@ -196,7 +198,7 @@ def create_app(test_config=None):
                 .all()
             )
 
-            # Post the update in the front end
+            # Post latest status in the front end
             current_questions = paginate_questions(request, selection)
 
             return jsonify(
@@ -256,7 +258,7 @@ def create_app(test_config=None):
         except Exception:
             abort(404)
 
-    # Error handlers --<checked
+    ### Error handlers: 404 error when user access page not existing
     
     @app.errorhandler(404)
     def file_absent(error):
@@ -264,7 +266,7 @@ def create_app(test_config=None):
             jsonify({"success": False, "error": 404, "message": "resource not found"}),
             404,
         )
-
+    ### 422 error when server understand content type but unable to process content instructions
     @app.errorhandler(422)
     def unprocessable_path(error):
         return (
@@ -272,10 +274,12 @@ def create_app(test_config=None):
             422,
         )
 
+    ### 400 error when server can't process request due to client error
     @app.errorhandler(400)
     def bad_request_log(error):
         return jsonify({"success": False, "error": 400, "message": "bad request"}), 400
 
+    ### 405 error when target resource does not support the method
     @app.errorhandler(405)
     def file_absent(error):
         return (
@@ -283,6 +287,7 @@ def create_app(test_config=None):
             405,
         )
 
+    ### 505 error where Http version in request is not supported by the server
     @app.errorhandler(505)
     def file_absent(error):
         return (
