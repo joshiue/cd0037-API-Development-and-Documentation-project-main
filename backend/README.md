@@ -107,7 +107,6 @@ python test_flaskr.py
 
 - Base URL For Backend: <http://127.0.0.1:5000/>
 - Base URL For Frontend: <http://localhost:3000/>
-- Authentication: There is no authentication or API keys equired for this version of the application.
 
 ### Error handling
 
