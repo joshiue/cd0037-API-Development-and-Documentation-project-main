@@ -266,9 +266,10 @@ Returns: a single new question object
   "total_questions": 1
 }
 ```
+*Returns: Does not return any new data*
 
-**Returns: Does not return any new data**
-*POST '/questions'*
+
+**POST '/questions'**
 Sends a post request in order to search for a specific question by search term Request Body:
 
 ```{
