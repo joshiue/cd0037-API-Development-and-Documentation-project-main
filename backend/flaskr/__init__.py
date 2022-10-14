@@ -218,7 +218,7 @@ def create_app(test_config=None):
 
     @app.route("/quizzes", methods=["POST"])
     def fetch_quizzes_list():
-        # get the qestion category
+        # get the question category
         body = request.get_json()
         quiz_category = body.get("quiz_category", None)
         previous_questions = body.get("previous_questions", None)

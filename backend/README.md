@@ -121,11 +121,13 @@ Invoking any of the following errors will return a JSON object in this format:
 }
 ```
 
-The API will return three error types when request fail:
+The API will return four error types when request fail:
 
 - 400: Bad Request
+- 404: Resource not found
 - 405: Method Not Allowed
-- 422: Not Processable
+- 422: Unprocessable
+- 505: Internal server error
 
 ## Endpoints
 
