@@ -103,6 +103,53 @@ psql trivia_test < trivia.psql
 python test_flaskr.py
 ```
 
+## API Documentation
+
+- Base URL For Backend: <http://127.0.0.1:5000/>
+- Base URL For Frontend: <http://localhost:3000/>
+- Authentication: There is no authentication or API keys equired for this version of the application.
+
+### Error handling
+
+Invoking any of the following errors will return a JSON object in this format:
+
+```
+{
+  "success": False,
+  "error": 400,
+  "message": "bad request"
+}
+```
+
+The API will return three error types when request fail:
+
+- 400: Bad Request
+- 405: Method Not Allowed
+- 422: Not Processable
+
+## Endpoints
+
+**GET /categories**
+
+- General:
+  - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
+  - Request Arguments: None
+  - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs, success value.
+- Sample:`curl http://127.0.0.1:5000/categories`
+
+```{
+"categories": {
+    "1": "Science",
+    "2": "Art",
+    "3": "Geography",
+    "4": "History",
+    "5": "Entertainment",
+    "6": "Sports"
+  },
+  "success": true
+}
+```
+
 GET '/questions?page=${integer}'
 Fetches a paginated set of questions, a total number of questions, all categories and current category string.
 
@@ -160,7 +207,9 @@ Request Arguments: id - integer
 Doesn't need to return anything besides the appropriate HTTP status code. Can return the id of the question, if you are able to modify the frontend, you can have it remove the question using the id instead of refetching the questions.
 
 **POST '/quizzes'**
-Sends a post request to get the next question Request Body:
+
+- Sample:`curl <http://127.0.0.1:5000/quizzes>
+- Sends a post request to get the next question Request Body:
 
 ```{
   "previous_questions": [1, 4, 20, 15],
@@ -191,6 +240,32 @@ Returns: a single new question object
 }
 ```
 
+**POST /questions/search**
+
+- General:
+  - Search for any question using the submitted search term which is a substring of the question
+  - Returns: current category, question, answer, category, difficulty, id, success value.
+- Sample: `curl http://127.0.0.1:5000/questions/search`
+
+```
+{
+"current_category": [
+    4
+  ],
+  "questions": [
+    {
+      "answer": "The great pyramid",
+      "category": 4,
+      "difficulty": 2,
+      "id": 25,
+      "question": "What is the biggest pyramid?"
+    }
+  ],
+  "success": true,
+  "total_questions": 1
+}
+```
+
 **Returns: Does not return any new data**
 *POST '/questions'*
 Sends a post request in order to search for a specific question by search term Request Body:
@@ -200,7 +275,7 @@ Sends a post request in order to search for a specific question by search term R
 }
 ```
 
-Returns: any array of questions, a number of totalQuestions that met the search term and the current category string
+Returns: any array of questions, a number of totalQuestions that meet the search term and the current category
 
 ```{
   "questions": [
